@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import { useGlobalContext } from "../Context";
 import Logo from "../assets/images/logo.png";
 
