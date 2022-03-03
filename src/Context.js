@@ -1,26 +1,20 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useCallback } from "react";
 
-const API_KEY = "8bac5e5b4d76433f80f45beb66056b4e";
+const API_KEY = process.env.REACT_APP_API_KEY;
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [games, setGames] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("a");
 
   //
-  const fetchGames = async () => {
+  const fetchGames = useCallback(async () => {
     setLoading(true);
+    console.log(API_KEY);
     try {
       const response = await fetch(
-        `https://rawg-video-games-database.p.rapidapi.com/games?key=${API_KEY}`,
-        {
-          method: "GET",
-          headers: {
-            "x-rapidapi-host": "rawg-video-games-database.p.rapidapi.com",
-            "x-rapidapi-key":
-              "ae19b16530msh43c1d970ac31ed9p14bacbjsn9ff950cdd289",
-          },
-        }
+        `https://api.rawg.io/api/games?key=${API_KEY}&search=${searchTerm}`
       );
       const data = await response.json();
       console.log(data.results);
@@ -38,17 +32,18 @@ const AppProvider = ({ children }) => {
       console.error(e);
       setLoading(false);
     }
-  };
+  }, [searchTerm]);
 
   // fetch data when serach term changes
   useEffect(() => {
     fetchGames();
-  }, []);
+  }, [fetchGames]);
   return (
     <AppContext.Provider
       value={{
         loading,
         games,
+        setSearchTerm,
       }}
     >
       {children}
