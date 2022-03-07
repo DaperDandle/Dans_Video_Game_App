@@ -7,17 +7,19 @@ const AppProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [games, setGames] = useState([]);
   const [searchTerm, setSearchTerm] = useState("a");
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   //
   const fetchGames = useCallback(async () => {
     setLoading(true);
-    console.log(API_KEY);
+
     try {
       const response = await fetch(
-        `https://api.rawg.io/api/games?key=${API_KEY}&search=${searchTerm}`
+        `https://api.rawg.io/api/games?key=${API_KEY}&search=${searchTerm}&search_precise&page=${page}&page_size=${pageSize}`
       );
       const data = await response.json();
-      console.log(data.results);
+
       if (data) {
         setGames(data.results);
         setLoading(false);
@@ -32,7 +34,7 @@ const AppProvider = ({ children }) => {
       console.error(e);
       setLoading(false);
     }
-  }, [searchTerm]);
+  }, [searchTerm, page, pageSize]);
 
   // fetch data when serach term changes
   useEffect(() => {
@@ -44,6 +46,10 @@ const AppProvider = ({ children }) => {
         loading,
         games,
         setSearchTerm,
+        page,
+        setPage,
+        pageSize,
+        setPageSize,
       }}
     >
       {children}
