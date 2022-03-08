@@ -3,12 +3,13 @@ import { useGlobalContext } from "../Context";
 import Logo from "../assets/images/logo.png";
 
 const Navbar = () => {
-  const { setSearchTerm, setPageSize } = useGlobalContext();
+  const { setSearchTerm, searchTerm, setPageSize } = useGlobalContext();
   const searchRef = useRef("");
   const pageRef = useRef("");
 
   const searchGames = () => {
     setSearchTerm(searchRef.current.value);
+    console.log(searchTerm);
   };
 
   const changePageSize = () => {
@@ -21,7 +22,9 @@ const Navbar = () => {
           <img src={Logo} alt="logo" />
         </a>
         <form className="d-flex">
-          <label htmlFor="page_size">Results per Page: </label>
+          <label htmlFor="page_size" className="text-white">
+            Results per Page:{" "}
+          </label>
           <select name="page_size" ref={pageRef} onChange={changePageSize}>
             <option value="10">10</option>
             <option value="20">20</option>

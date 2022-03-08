@@ -45,6 +45,7 @@ const AppProvider = ({ children }) => {
       value={{
         loading,
         games,
+        searchTerm,
         setSearchTerm,
         page,
         setPage,
