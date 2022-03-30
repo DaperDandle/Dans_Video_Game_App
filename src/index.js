@@ -1,15 +1,18 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import "./assets/main.css";
+import "./main.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Layout from "./components/layout";
 
 import { AppProvider } from "./Context";
 
 ReactDOM.render(
   <React.StrictMode>
     <AppProvider>
-      <App />
+      <Layout>
+        <App />
+      </Layout>
     </AppProvider>
   </React.StrictMode>,
   document.getElementById("root")

@@ -1,0 +1,40 @@
+// body {
+//   background-color: blueviolet !important;
+// }
+
+// .single-game {
+//   width: 350px;
+// }
+
+// .single-game section {
+//   height: 250px;
+// }
+@import "../node_modules/bootstrap/scss/functions";
+
+$primary: blueviolet;
+
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/mixins";
+@import "../node_modules/bootstrap/scss/root";
+
+@import "../node_modules/bootstrap/scss/utilities";
+@import "../node_modules/bootstrap/scss/reboot";
+@import "../node_modules/bootstrap/scss/type";
+@import "../node_modules/bootstrap/scss/images";
+@import "../node_modules/bootstrap/scss/containers";
+@import "../node_modules/bootstrap/scss/grid";
+@import "../node_modules/bootstrap/scss/helpers";
+
+body {
+  background-color: $secondary !important;
+}
+
+.game-container {
+  height: 400px;
+}
+
+.game-img {
+  width: 100%;
+  height: 150px;
+  overflow: hidden;
+}

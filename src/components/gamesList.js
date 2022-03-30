@@ -13,7 +13,7 @@ const GamesList = () => {
     );
   } else {
     return (
-      <section className="d-flex flex-wrap justify-content-between">
+      <section className="d-flex flex-wrap justify-content-between container-md">
         {games.map((game) => {
           const { id, background_image, name } = game;
           return <SingleGame key={id} image={background_image} name={name} />;
