@@ -3,13 +3,17 @@ import { useGlobalContext } from "../Context";
 import Logo from "../assets/images/logo.png";
 
 const Navbar = () => {
-  const { setSearchTerm, searchTerm, setPageSize } = useGlobalContext();
+  const { setSearchParameters, searchParameters, setPageSize } =
+    useGlobalContext();
   const searchRef = useRef("");
   const pageRef = useRef("");
 
   const searchGames = () => {
-    setSearchTerm(searchRef.current.value);
-    console.log(searchTerm);
+    setSearchParameters((prevParameters) => ({
+      ...prevParameters,
+      searchTerm: searchRef.current.value,
+    }));
+    console.log(searchParameters);
   };
 
   const changePageSize = () => {

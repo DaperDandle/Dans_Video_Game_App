@@ -6,7 +6,13 @@ const AppContext = React.createContext();
 const AppProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [games, setGames] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("a");
+  //const [searchTerm, setSearchTerm] = useState("");
+  const [searchParameters, setSearchParameters] = useState({
+    searchTerm: "",
+    genre: "",
+    platform: "",
+    developer: "",
+  });
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
@@ -16,7 +22,7 @@ const AppProvider = ({ children }) => {
 
     try {
       const response = await fetch(
-        `https://api.rawg.io/api/games?key=${API_KEY}&search=${searchTerm}&search_precise&page=${page}&page_size=${pageSize}`
+        `https://api.rawg.io/api/games?key=${API_KEY}&search=${searchParameters.searchTerm}&search_precise&page=${page}&page_size=${pageSize}`
       );
       const data = await response.json();
 
@@ -25,7 +31,7 @@ const AppProvider = ({ children }) => {
         setLoading(false);
       }
 
-      // set array to empty if fetch fails and catch error in rendering movie list
+      // set array to empty if fetch fails and catch error in rendering game list
       else {
         setGames([]);
         setLoading(false);
@@ -34,7 +40,7 @@ const AppProvider = ({ children }) => {
       console.error(e);
       setLoading(false);
     }
-  }, [searchTerm, page, pageSize]);
+  }, [searchParameters, page, pageSize]);
 
   // fetch data when serach term changes
   useEffect(() => {
@@ -45,8 +51,8 @@ const AppProvider = ({ children }) => {
       value={{
         loading,
         games,
-        searchTerm,
-        setSearchTerm,
+        searchParameters,
+        setSearchParameters,
         page,
         setPage,
         pageSize,
