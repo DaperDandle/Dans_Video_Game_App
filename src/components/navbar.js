@@ -1,20 +1,11 @@
 import React, { useRef } from "react";
 import { useGlobalContext } from "../Context";
 import Logo from "../assets/images/logo.png";
+import Search from "./search";
 
 const Navbar = () => {
-  const { setSearchParameters, searchParameters, setPageSize } =
-    useGlobalContext();
-  const searchRef = useRef("");
+  const { setPageSize } = useGlobalContext();
   const pageRef = useRef("");
-
-  const searchGames = () => {
-    setSearchParameters((prevParameters) => ({
-      ...prevParameters,
-      searchTerm: searchRef.current.value,
-    }));
-    console.log(searchParameters);
-  };
 
   const changePageSize = () => {
     setPageSize(pageRef.current.value);
@@ -34,17 +25,7 @@ const Navbar = () => {
             <option value="20">20</option>
             <option value="30">30</option>
           </select>
-          <input
-            className="form-control me-2"
-            type="search"
-            placeholder="Search"
-            aria-label="Search"
-            ref={searchRef}
-            onChange={searchGames}
-          />
-          <button className="btn btn-outline-success" type="submit">
-            Search
-          </button>
+          <Search />
         </form>
       </div>
     </nav>

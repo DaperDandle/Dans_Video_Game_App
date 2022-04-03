@@ -6,7 +6,8 @@ const AppContext = React.createContext();
 const AppProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [games, setGames] = useState([]);
-  //const [searchTerm, setSearchTerm] = useState("");
+  const [genres, setGenres] = useState([]);
+  const [platforms, setPlatforms] = useState([]);
   const [searchParameters, setSearchParameters] = useState({
     searchTerm: "",
     genre: "",
@@ -42,9 +43,60 @@ const AppProvider = ({ children }) => {
     }
   }, [searchParameters, page, pageSize]);
 
+  const fetchGenres = async () => {
+    setLoading(true);
+
+    try {
+      const response = await fetch(
+        `https://api.rawg.io/api/genres?key=${API_KEY}`
+      );
+      const data = await response.json();
+
+      if (data) {
+        setGenres(data.results);
+        setLoading(false);
+      }
+
+      // set array to empty if fetch fails and catch error in rendering game list
+      else {
+        setGenres([]);
+        setLoading(false);
+      }
+    } catch (e) {
+      console.error(e);
+      setLoading(false);
+    }
+  };
+  const fetchPlatforms = async () => {
+    setLoading(true);
+
+    try {
+      const response = await fetch(
+        `https://api.rawg.io/api/platforms/lists/parents?key=${API_KEY}`
+      );
+      const data = await response.json();
+
+      if (data) {
+        setPlatforms(data.results);
+        setLoading(false);
+      }
+
+      // set array to empty if fetch fails and catch error in rendering game list
+      else {
+        setPlatforms([]);
+        setLoading(false);
+      }
+    } catch (e) {
+      console.error(e);
+      setLoading(false);
+    }
+  };
+
   // fetch data when serach term changes
   useEffect(() => {
     fetchGames();
+    fetchGenres();
+    fetchPlatforms();
   }, [fetchGames]);
   return (
     <AppContext.Provider
@@ -57,6 +109,8 @@ const AppProvider = ({ children }) => {
         setPage,
         pageSize,
         setPageSize,
+        genres,
+        platforms,
       }}
     >
       {children}
