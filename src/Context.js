@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useCallback } from "react";
+import React, { useContext, useState, useEffect } from "react";
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 const AppContext = React.createContext();
@@ -13,17 +13,17 @@ const AppProvider = ({ children }) => {
     genre: "",
     platform: "",
     developer: "",
+    page: 1,
+    pageSize: 30,
   });
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
 
-  //
-  const fetchGames = useCallback(async () => {
+  const fetchInitialState = async () => {
     setLoading(true);
 
+    //fetch games
     try {
       const response = await fetch(
-        `https://api.rawg.io/api/games?key=${API_KEY}&search=${searchParameters.searchTerm}&search_precise&page=${page}&page_size=${pageSize}`
+        `https://api.rawg.io/api/games?key=${API_KEY}&page_size=30`
       );
       const data = await response.json();
 
@@ -41,11 +41,9 @@ const AppProvider = ({ children }) => {
       console.error(e);
       setLoading(false);
     }
-  }, [searchParameters, page, pageSize]);
 
-  const fetchGenres = async () => {
+    // fetch genres
     setLoading(true);
-
     try {
       const response = await fetch(
         `https://api.rawg.io/api/genres?key=${API_KEY}`
@@ -66,10 +64,9 @@ const AppProvider = ({ children }) => {
       console.error(e);
       setLoading(false);
     }
-  };
-  const fetchPlatforms = async () => {
-    setLoading(true);
 
+    // fetch platforms
+    setLoading(true);
     try {
       const response = await fetch(
         `https://api.rawg.io/api/platforms/lists/parents?key=${API_KEY}`
@@ -92,23 +89,49 @@ const AppProvider = ({ children }) => {
     }
   };
 
-  // fetch data when serach term changes
+  const searchGames = async (searchParameters) => {
+    setLoading(true);
+    console.log(searchParameters);
+    const { searchTerm, platform, genre, page, pageSize } = searchParameters;
+    try {
+      const response = await fetch(
+        `https://api.rawg.io/api/games?key=${API_KEY}${
+          searchTerm ? `&search=${searchTerm}` : ""
+        }${genre ? `&genres=${genre}` : ""}${
+          platform ? `&parent_platforms=${platform}` : ""
+        }&page=${page}&page_size=${pageSize}`
+      );
+      const data = await response.json();
+
+      if (data) {
+        setGames(data.results);
+        setLoading(false);
+      }
+
+      // set array to empty if fetch fails and catch error in rendering game list
+      else {
+        setGames([]);
+        setLoading(false);
+      }
+    } catch (e) {
+      console.error(e);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    fetchGames();
-    fetchGenres();
-    fetchPlatforms();
-  }, [fetchGames]);
+    fetchInitialState();
+  }, []);
   return (
     <AppContext.Provider
       value={{
         loading,
+        setLoading,
         games,
+        setGames,
         searchParameters,
         setSearchParameters,
-        page,
-        setPage,
-        pageSize,
-        setPageSize,
+        searchGames,
         genres,
         platforms,
       }}

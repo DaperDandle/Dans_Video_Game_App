@@ -2,17 +2,24 @@ import React from "react";
 import { useGlobalContext } from "../Context";
 
 const PageControl = () => {
-  const { page, setPage } = useGlobalContext();
+  const { searchParameters, setSearchParameters, searchGames } =
+    useGlobalContext();
 
   const decreasePage = () => {
-    if (page > 1) {
-      setPage((prevPage) => prevPage - 1);
-    } else {
-      setPage(1);
+    if (searchParameters.page > 1) {
+      setSearchParameters((prevParameters) => ({
+        ...prevParameters,
+        page: prevParameters.page - 1,
+      }));
+      searchGames(searchParameters);
     }
   };
   const increasePage = () => {
-    setPage((prevPage) => prevPage + 1);
+    setSearchParameters((prevParameters) => ({
+      ...prevParameters,
+      page: prevParameters.page + 1,
+    }));
+    searchGames(searchParameters);
   };
 
   return (
